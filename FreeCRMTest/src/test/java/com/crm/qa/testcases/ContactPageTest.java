@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.crm.qa.base.TestBase;
@@ -19,6 +20,7 @@ public class ContactPageTest extends TestBase {
 	HomePage homePage;
 	ContactsPage contactsPage;
 	TestUtil testUtil;
+	String sheetName = "Contacts";
 
 	public ContactPageTest() {
 		super();
@@ -49,6 +51,19 @@ public class ContactPageTest extends TestBase {
 	public void selectMultipleContactsTest() {
 		contactsPage.selectContactsByName("aaa der");
 		contactsPage.selectContactsByName("abc ae");
+	}
+
+	@DataProvider
+	public Object[][] getCRMTestData() {
+		Object data[][] = TestUtil.getTestData(sheetName);
+		return data;
+	}
+
+	@Test(priority = 4, dataProvider = "getCRMTestData")
+	public void validateCreateNewContactTest(String title, String firstName, String lastName, String company) {
+		homePage.clickOnNewContactsLink();
+		// contactsPage.createNewContact("Mr.", "Geoff", "Day", "Japan Travel");
+		contactsPage.createNewContact(title, firstName, lastName, company);
 	}
 
 	@AfterMethod
